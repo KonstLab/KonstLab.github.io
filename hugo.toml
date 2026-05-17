@@ -1,0 +1,9 @@
+baseURL = 'https://konstlab.github.io/'
+languageCode = 'en-us'
+title = 'KonstLab'
+theme = 'PaperMod'
+
+[params]
+  defaultTheme = "dark"
+  ShowReadingTime = true
+  ShowPostNavLinks = true
