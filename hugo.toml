@@ -4,6 +4,14 @@ title = 'KonstLab'
 theme = 'PaperMod'
 
 [params]
-  defaultTheme = "dark"
+  defaultTheme = "auto"
   ShowReadingTime = true
   ShowPostNavLinks = true
+
+[params.math]
+  enable = true
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
