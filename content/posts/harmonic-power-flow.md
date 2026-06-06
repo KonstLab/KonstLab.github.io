@@ -95,7 +95,7 @@ $$
 with the grid voltage $U_g$ and the line admittance $Y=(j\omega L)^{-1}$. When we need to find load current 1<sup>st</sup> harmonic $I_{ld-h1}$ from voltage $U_{ld-h1}$, we will switch from frequency domain to time domain (DC offset is not present):
 
 $$
-u_{ld}=|U_{ld-h1}|\cdot\sin(\omega t+\angle U_{ld-h1})
+u_{ld}=\sqrt{2}\cdot|U_{ld-h1}|\cdot\sin(\omega t+\angle U_{ld-h1})
 $$
 
 then, as it was done above, flux linkage is calculated $\lambda=\int u_{ld}$ and $i_{ld}=f(\lambda)$. From this time waveform, the 1<sup>st</sup> harmonic $I_{ld-h1}$ is obtained using DFT. The corresponding Matlab function is:
@@ -276,7 +276,7 @@ end
 To find $I_{ld-h}=f(U_{ld-h})$, we need to take into account all harmonics to reconstruct voltage in time domain (DC offset is not present):
 
 $$
-u_{ld}=\sum_{h}|U_{ld-h}|\cdot\sin(\omega t\cdot h+\angle U_{ld-h})
+u_{ld}=\sum_{h}\sqrt{2}\cdot|U_{ld-h}|\cdot\sin(\omega t\cdot h+\angle U_{ld-h})
 $$
 
 and Matlab function for this:
