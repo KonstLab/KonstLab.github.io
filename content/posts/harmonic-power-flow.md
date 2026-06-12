@@ -30,7 +30,7 @@ The load is essentially an inductor with non-linear flux linkage - current relat
 In this article, harmonics are calculated from instantaneous quantities $x(t)$ using Discrete Fourier Transform (DFT): 
 
 $$
-X_h=\frac{\sqrt{2}\exp(j\frac{\pi}{2})}{N}\sum_{n=1}^N x(n)\exp(-j2\pi\frac{n}{N}h)
+X_h=\frac{\sqrt{2}\exp(j\frac{\pi}{2})}{N}\sum_{n=0}^{N-1} x(n)\exp(-j2\pi\frac{n}{N}h)
 $$
 
 where $X_h$ is the $h$-order sin-based RMS harmonic phasor and $N$ is the number of samples in one period. 
@@ -109,7 +109,7 @@ function I_ld_h1=nonlinear_load_current_main_harmonic(U_ld_h1,w,t,dt)
     lambda(ii)=lambda(ii-1)+0.5*(u_ld(ii-1)+u_ld(ii))*dt;
   endfor
   i_ld=sign(lambda).*(9.6539e+06*abs(lambda).^3+2.0879e+04*abs(lambda).^2);
-  I_ld_h1=mean(i_ld.*exp(-1i*2*pi/N*[1:N]))*sqrt(2)*exp(1i*pi/2);
+  I_ld_h1=mean(i_ld.*exp(-1i*2*pi/N*[0:N-1]))*sqrt(2)*exp(1i*pi/2);
 end
 ```
 
@@ -165,7 +165,8 @@ end
 Finally, Matlab solver with 5 iterations and initial guess $U_{ld-h1}=j$ looks like this:
 
 ```
-t=[0:dt:0.02]; ##only one period!
+N=round(2*pi/w/dt);
+t=[0:N-1]*dt; ##only one period!
 U_g=1i;
 Y=1/(1i*w*L);
 U_ld_h1=1i; ##initial guess
@@ -177,12 +178,11 @@ for iter=1:5
   U_ld_h1=U_ld_h1+delta_u(1)+1i*delta_u(2);
 endfor
 ```
-It gives $|U_{ld-h1}|=0.89302$ that is very close to the reference $0.89502$. 
+It gives $|U_{ld-h1}|=0.893$ that is very close to the reference $0.895$. 
 
 For the second step to find load current 3<sup>rd</sup> and 5<sup>th</sup> harmonics $I_{ld-h3}$ and $I_{ld-h5}$ using $U_{ld-h1}$, we use the same approach as above and go from frequency to time domain. Matlab script for this is:
 
 ```
-N=length(t);
 u_ld=sqrt(2)*abs(U_ld_h1)*sin(w*t+angle(U_ld_h1));
 lambda=zeros(1,N);
 for ii=2:N
@@ -190,8 +190,8 @@ for ii=2:N
 endfor
 i_ld=sign(lambda).*(9.6539e+06*abs(lambda).^3+2.0879e+04*abs(lambda).^2);
 
-I_ld_h3=mean(i_ld.*exp(-1i*2*pi/N*[1:N]*3))*sqrt(2)*exp(1i*pi/2);
-I_ld_h5=mean(i_ld.*exp(-1i*2*pi/N*[1:N]*5))*sqrt(2)*exp(1i*pi/2);
+I_ld_h3=mean(i_ld.*exp(-1i*2*pi/N*[0:N-1]*3))*sqrt(2)*exp(1i*pi/2);
+I_ld_h5=mean(i_ld.*exp(-1i*2*pi/N*[0:N-1]*5))*sqrt(2)*exp(1i*pi/2);
 ```
 Finally, for the last step, we find load voltage harmonics $U_{ld-h3}$ and $U_{ld-h5}$ using $I_{ld-h3}$ and $I_{ld-h5}$ as (Matlab script):
 
@@ -295,7 +295,7 @@ function I_ld_h=nonlinear_load_current_harmonics(U_ld_h,hs,w,t,dt)
   i_ld=sign(lambda).*(9.6539e+06*abs(lambda).^3+2.0879e+04*abs(lambda).^2);
   I_ld_h=zeros(1,length(hs));
   for hh=1:length(hs)
-    I_ld_h(hh)=mean(i_ld.*exp(-1i*2*pi/N*hs(hh)*[1:N]))*sqrt(2)*exp(1i*pi/2);
+    I_ld_h(hh)=mean(i_ld.*exp(-1i*2*pi/N*hs(hh)*[0:N-1]))*sqrt(2)*exp(1i*pi/2);
   endfor
 end
 ```
@@ -325,8 +325,8 @@ The results highlight the fundamental difference between the two approaches in t
 
 Order | Decoupled       |  Coupled
 --- | ---       |   ---
-1<sup>st</sup> | 0.22% | 0.00035%
-3<sup>rd</sup> | 20.5% | 0.0016%
-5<sup>th</sup> | 60.7% | 0.014%
+1<sup>st</sup> | 0.19% | 0.00021%
+3<sup>rd</sup> | 20.3% | 0.037%
+5<sup>th</sup> | 60.6% | 1.86%
 
 It is worth mentioning that precision of the decoupled approach can be improved by doing several iterations in finding harmonic voltages. However, the final result depends on system complexity and might be still relatively poor.
