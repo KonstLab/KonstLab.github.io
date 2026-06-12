@@ -11,8 +11,6 @@ weight = 10
 
 [params]
   defaultTheme = "auto"
-  ShowReadingTime = true
-  ShowPostNavLinks = true
 
 [params.math]
   enable = true

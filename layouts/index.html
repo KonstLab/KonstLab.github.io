@@ -1,0 +1,14 @@
+{{ define "main" }}
+<table>
+{{ range where .Site.RegularPages "Section" "posts" }}
+<tr>
+  <td style="padding-right: 20px; white-space: nowrap;">
+    {{ .Date.Format "02 Jan 2006" }}
+  </td>
+  <td>
+    <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+  </td>
+</tr>
+{{ end }}
+</table>
+{{ end }}
