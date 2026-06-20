@@ -20,7 +20,7 @@ The five-parameter model of a PV panel is demonstrated in the figure below and i
 1. photo-generated current $I_{ph}$,
 2. series resistance $R_s$,
 3. shunt resistance $R_{sh}$,
-4. Thermal voltage $V_t$,
+4. thermal voltage $V_t$,
 5. diode saturation current $I_0$. 
 
 ![PV model](/images/pv-hyg3-cma-es/PVmodel.jpg)  
@@ -37,7 +37,7 @@ where $k$ is the Boltzmann constant, $q$ is the electron charge, and $T_{STC}=29
 The model voltage-current characteristic $I_{pv}=f(V_{pv})$ is described by the following equation:
 
 $$
-I_{pv}=I_{ph}-I_0\exp\Big({\frac{V_{pv}+I_{pv}*R_s}{V_t}}\Big)-\frac{V_{pv}+I_{pv}*R_s}{R_{sh}}
+I_{pv}=I_{ph}-I_0\exp\Big({\frac{V_{pv}+I_{pv}R_s}{V_t}}\Big)-\frac{V_{pv}+I_{pv}R_s}{R_{sh}}
 $$
 
 This non-linear equation is solved using a fixed-point iteration approach. It is used here to avoid directly solving the implicit non-linear equation for current. While simple to implement, the method may become numerically unstable near the open-circuit voltage, where the exponential term dominates and small numerical changes lead to large variations in the solution. The Matlab function looks like this: 
